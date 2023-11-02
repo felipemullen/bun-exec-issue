@@ -1,0 +1,52 @@
+storage: /verdaccio/storage
+plugins: /verdaccio/plugins
+
+# https://verdaccio.org/docs/webui
+web:
+  title: Verdaccio
+
+# https://verdaccio.org/docs/configuration#authentication
+auth:
+  htpasswd:
+    file: ./htpasswd
+
+# https://verdaccio.org/docs/configuration#uplinks
+uplinks:
+  npmjs:
+    cache: false
+    url: https://registry.npmjs.org/
+
+  # I have commented this out for this replication repository, but I am using it myself
+  # artifactory:
+  #   cache: false
+  #   url:
+  #   headers:
+  #     Authorization:
+
+# https://verdaccio.org/docs/configuration#packages
+packages:
+  '@*/*':
+    # scoped packages
+    access: $all
+    publish: $authenticated
+    unpublish: $authenticated
+    proxy: npmjs
+
+  '**':
+    access: $all
+
+    publish: $authenticated
+    unpublish: $authenticated
+
+    proxy: npmjs
+
+# https://verdaccio.org/docs/configuration#server
+server:
+  keepAliveTimeout: 60
+
+middlewares:
+  audit:
+    enabled: true
+
+# https://verdaccio.org/docs/logger
+log: { type: stdout, format: pretty, level: http }
